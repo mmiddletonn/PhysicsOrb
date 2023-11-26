@@ -6,13 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let orbVelocityY = 0;
     let orbX, orbY;
     let lastTime = Date.now();
-    const centeringStrength = 2; // Modify strength of orb centering
-    const opposingForceMultiplier = 3; // Modify force that opposes window movement
+    const centeringStrength = 1; // Modify strength of orb centering
+    const opposingForceMultiplier = 5; // Modify force that opposes window movement
     const snapMultiplier = 0; // Modify snapback force
     let lastMovement = { x: 0, y: 0 }; // Track the last window movement
     let windowStopped = false;
     let distortionX = 0, distortionY = 0;
-    const distortionStrength = 0.1;
+    const distortionStrength = .075;
 
     function updateOrbPosition(deltaTime) {
         orbX += orbVelocityX * deltaTime;
@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate distortion based on velocity
         distortionX = orbVelocityX * distortionStrength;
         distortionY = orbVelocityY * distortionStrength;
+
+        // Request next physics update
+        requestAnimationFrame(applyPhysics);
     }
 
     function resizeCanvas() {
@@ -123,17 +126,16 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.beginPath();
             ctx.arc(x + orbX, y + orbY, particleRadius, 0, Math.PI * 2, true);
             ctx.fill();
-
         }
-    
+
+        // Request next frame
+        requestAnimationFrame(drawElements);
     }
-    
-    
-    
-    
 
-    setInterval(drawElements, 50);
-    setInterval(applyPhysics, 20);
+    // Start the animation loops
+    requestAnimationFrame(applyPhysics);
+    requestAnimationFrame(drawElements);
 
-    resizeCanvas(); // Initial setup
+    // Initialize canvas size
+    resizeCanvas(); 
 });
